@@ -29,5 +29,26 @@
 // Output: "/c"
 
 var simplifyPath = function(path) {
+  // creates array with all characters between slashes, side effect is that slashes become an empty string
+  let betweenSlashes = path.split('/');
+  // removes all empty strings
+  let noSpaces = betweenSlashes.filter(char => char !== '');
+  // holds all directories that make it to the canonical path
+  let slashlessPath = [];
 
+  for (let i = 0; i < noSpaces.length; i++) {
+    let char = noSpaces[i];
+    // if we ever 'go back' a directory, we remove the most recent move
+    if (char === '..') {
+      slashlessPath.pop();
+    }
+    // we ignore '.' since it doesn't move us, and we have already dealt with '..' moving us 'back'
+    // in all other cases we add the directory to our array
+    if (char !== '.' && char !== '..') {
+      slashlessPath.push(char)
+    }
+  }
+
+  // join the array with a slash between all directories and a slash at the start to create canonical path
+  return '/' + slashlessPath.join('/');
 };
